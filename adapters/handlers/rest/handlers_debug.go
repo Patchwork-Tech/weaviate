@@ -138,7 +138,7 @@ func setupDebugHandlers(appState *state.State) {
 
 		shard := idx.GetShard(shardName)
 		if shard == nil {
-			logger.WithField("shard", shardName).Error("shard not found")
+			logger.Warn("Failed to retrieve shard for collection statistics", zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Strings("pathParts", parts))
 			http.Error(w, "shard not found", http.StatusNotFound)
 			return
 		}
