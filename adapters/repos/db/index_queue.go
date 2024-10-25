@@ -668,7 +668,7 @@ func (q *IndexQueue) Wait() {
 // resume indexing
 func (q *IndexQueue) ResumeIndexing() {
 	if !q.paused.CompareAndSwap(true, false) {
-		q.Logger.Warn("attempted to resume indexing, but it is already running")
+		q.Logger.Info("attempted to resume indexing, but it is already running")
 		return
 	}
 	q.Logger.Debug("indexing resumed")
