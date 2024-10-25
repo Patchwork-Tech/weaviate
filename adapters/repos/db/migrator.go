@@ -731,7 +731,7 @@ func (m *Migrator) RecountProperties(ctx context.Context) error {
 			return nil
 		})
 		if err != nil {
-			m.logger.WithField("error", err).Error("could not clear prop lengths")
+			m.logger.Error("could not clear property lengths", zap.Error(err))
 		}
 
 		// Iterate over all shards
