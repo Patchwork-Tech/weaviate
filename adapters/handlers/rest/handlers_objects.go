@@ -731,7 +731,7 @@ func (h *objectHandlers) updateObjectReferencesDeprecated(params objects.Objects
 func (h *objectHandlers) deleteObjectReferenceDeprecated(params objects.ObjectsReferencesDeleteParams,
 	principal *models.Principal,
 ) middleware.Responder {
-	h.logger.Warn("deprecated endpoint: ", "DELETE "+params.HTTPRequest.URL.Path)
+	h.logger.Warn("deprecated endpoint", zap.String("method", "DELETE"), zap.String("path", params.HTTPRequest.URL.Path))
 	req := objects.ObjectsClassReferencesDeleteParams{
 		HTTPRequest:  params.HTTPRequest,
 		Body:         params.Body,
