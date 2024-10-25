@@ -1309,7 +1309,7 @@ func (i *indices) postShardFile() http.Handler {
 func (i *indices) postShard() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		args := i.regexpShard.FindStringSubmatch(r.URL.Path)
-		fmt.Println(args)
+		i.logger.Info("Shard creation request received", zap.Strings("args", args))
 		if len(args) != 3 {
 			http.Error(w, "invalid URI", http.StatusBadRequest)
 			return
