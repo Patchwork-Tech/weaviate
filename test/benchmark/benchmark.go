@@ -214,7 +214,7 @@ func startWeaviate(c *http.Client, url string) bool {
 		return alreadyRunning
 	}
 
-	fmt.Print("(Re-) build and start weaviate.\n")
+	log.Info("(Re-) build and start weaviate", zap.String("url", url), zap.Int("responseStartedCode", responseStartedCode), zap.Bool("alreadyRunning", alreadyRunning), zap.Error(err))
 	cmd := "./tools/test/run_ci_server.sh"
 	if err := command(cmd, []string{}, true); err != nil {
 		panic(errors.Wrap(err, "Command to (re-) build and start weaviate failed"))
