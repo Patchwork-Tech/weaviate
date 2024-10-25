@@ -135,7 +135,7 @@ func (s *Shard) initHashBeater() {
 						s.objectPropagationRequired()
 					}
 				} else {
-					logEntry.Warnf("hashbeat iteration failed: %v", propagationErr)
+					logEntry.Warn("hashbeat iteration failed", zap.Error(propagationErr))
 
 					time.Sleep(backoffTimer.CurrentInterval())
 					backoffTimer.IncreaseInterval()
