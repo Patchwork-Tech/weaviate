@@ -739,7 +739,7 @@ func (m *Migrator) RecountProperties(ctx context.Context) error {
 			count = count + 1
 			props, _, err := shard.AnalyzeObject(object)
 			if err != nil {
-				m.logger.WithField("error", err).Error("could not analyze object")
+				m.logger.Error("could not analyze object", zap.Error(err))
 				return nil
 			}
 
