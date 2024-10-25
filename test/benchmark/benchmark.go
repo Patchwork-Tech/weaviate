@@ -111,7 +111,7 @@ func main() {
 			"This is a change of "+fmt.Sprintf("%.2f", 100*float32(totalNewRuntime-totalOldRuntime)/float32(totalNewRuntime))+"%.\n"+
 			"Please update the benchmark results if necessary.\n\n",
 	)
-	fmt.Fprint(os.Stdout, "Runtime for individual steps:.\n")
+	log.Info("Runtime for individual steps:")
 	for name, time := range newRuntime {
 		fmt.Fprint(os.Stdout, "Runtime for "+name+" is "+fmt.Sprint(time)+"ms.\n")
 	}
