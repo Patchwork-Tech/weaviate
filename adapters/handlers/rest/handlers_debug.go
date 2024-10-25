@@ -86,7 +86,7 @@ func setupDebugHandlers(appState *state.State) {
 
 		idx := appState.DB.GetIndex(schema.ClassName(colName))
 		if idx == nil {
-			logger.WithField("collection", colName).Error("collection not found")
+			logger.Error("Failed to retrieve collection", zap.String("collection", colName))
 			http.Error(w, "collection not found", http.StatusNotFound)
 			return
 		}
