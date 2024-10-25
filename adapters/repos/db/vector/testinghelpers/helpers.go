@@ -128,7 +128,7 @@ func RandomVecs(size int, queriesSize int, dimensions int) ([][]float32, [][]flo
 }
 
 func RandomVecsFixedSeed(size int, queriesSize int, dimensions int) ([][]float32, [][]float32) {
-	fmt.Printf("generating %d vectors...\n", size+queriesSize)
+	log.Info("Generating vectors", zap.Int("total_vectors", size+queriesSize), zap.Int("dimensions", dimensions))
 	r := getFixedSeed()
 	vectors := make([][]float32, 0, size)
 	queries := make([][]float32, 0, queriesSize)
