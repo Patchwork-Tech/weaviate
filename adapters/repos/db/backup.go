@@ -342,7 +342,7 @@ func (m *shardTransfer) lock(ctx context.Context, tryLock func() bool) error {
 			}
 			if time.Since(curTime) > m.notifyDuration {
 				curTime = time.Now()
-				m.log.Info("backup process waiting for ongoing writes to finish")
+				m.log.Info("backup process waiting for ongoing writes to finish", zap.Duration("elapsed", time.Since(curTime)), zap.Duration("retryDuration", m.retryDuration), zap.Duration("notifyDuration", m.notifyDuration))
 			}
 		}
 	}
