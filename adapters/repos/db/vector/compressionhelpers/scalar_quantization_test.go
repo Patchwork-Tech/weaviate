@@ -120,7 +120,14 @@ func Test_NoRaceRandomSQDistanceFloatToByte(t *testing.T) {
 
 		recall := float32(relevant) / float32(k*len(queries))
 		latency := float32(ellapsed.Microseconds()) / float32(len(queries))
-		fmt.Println(distancer.Type(), recall, latency)
+		log.Info("Test results for random SQ distance float to byte",
+    zap.String("distancer_type", distancer.Type()),
+    zap.Float32("recall", recall),
+    zap.Float32("latency_us", latency),
+    zap.Int("dataset_size", vSize),
+    zap.Int("num_queries", qSize),
+    zap.Int("vector_dimensions", dims),
+    zap.Int("k_nearest_neighbors", k))
 		assert.GreaterOrEqual(t, recall, float32(0.95), distancer.Type())
 	}
 }
