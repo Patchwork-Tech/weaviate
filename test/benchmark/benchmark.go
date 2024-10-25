@@ -177,7 +177,7 @@ func command(app string, arguments []string, waitForCompletion bool) error {
 func readCurrentBenchmarkResults() benchmarkResult {
 	benchmarkFile, err := os.Open("benchmark_results.json")
 	if err != nil {
-		fmt.Print("No benchmark file present.")
+		log.Warn("No benchmark file present", zap.Error(err))
 		return make(benchmarkResult)
 	}
 	defer benchmarkFile.Close()
