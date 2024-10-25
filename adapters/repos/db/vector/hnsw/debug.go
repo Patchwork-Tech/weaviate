@@ -74,7 +74,7 @@ func (h *hnsw) DumpJSON(labels ...string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("%s\n", string(out))
+	h.logger.Info("HNSW graph JSON dump", zap.ByteString("dump", out))
 }
 
 type JSONDump struct {
