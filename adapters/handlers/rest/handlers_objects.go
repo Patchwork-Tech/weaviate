@@ -657,7 +657,7 @@ func (h *objectHandlers) getObjectDeprecated(params objects.ObjectsGetParams,
 func (h *objectHandlers) headObjectDeprecated(params objects.ObjectsHeadParams,
 	principal *models.Principal,
 ) middleware.Responder {
-	h.logger.Warn("deprecated endpoint: ", "HEAD "+params.HTTPRequest.URL.Path)
+	h.logger.Warn("deprecated endpoint", zap.String("method", "HEAD"), zap.String("path", params.HTTPRequest.URL.Path))
 	r := objects.ObjectsClassHeadParams{
 		HTTPRequest: params.HTTPRequest,
 		ID:          params.ID,
