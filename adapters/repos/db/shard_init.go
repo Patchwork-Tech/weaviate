@@ -136,7 +136,7 @@ func NewShard(ctx context.Context, promMetrics *monitoring.PrometheusMetrics,
 				for targetVector, queue := range s.queues {
 					err := s.PreloadQueue(targetVector)
 					if err != nil {
-						queue.Logger.WithError(err).Errorf("preload shard for target vector: %s", targetVector)
+						queue.Logger.Error("preload shard for target vector", zap.Error(err), zap.String("targetVector", targetVector))
 					}
 				}
 			} else {
