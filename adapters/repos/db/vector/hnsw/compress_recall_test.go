@@ -103,7 +103,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 			index.Add(id, vectors[id])
 		})
 		before = time.Now()
-		fmt.Println("Start compressing...")
+		log.Info("Start compressing...")
 		uc.PQ = ent.PQConfig{
 			Enabled:   true,
 			Segments:  dimensions / segments,
