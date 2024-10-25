@@ -119,7 +119,7 @@ func (s *Server) Logf(f string, args ...interface{}) {
 	if s.api != nil && s.api.Logger != nil {
 		s.api.Logger(f, args...)
 	} else {
-		log.Printf(f, args...)
+		s.api.Logger.Info(f, zap.Any("args", args))
 	}
 }
 
