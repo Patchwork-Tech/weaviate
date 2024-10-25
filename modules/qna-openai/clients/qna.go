@@ -88,7 +88,7 @@ func (v *qna) Answer(ctx context.Context, text, question string, cfg moduletools
 	if err != nil {
 		return nil, errors.Wrap(err, "join OpenAI API host and path")
 	}
-	fmt.Printf("using the OpenAI URL: %v\n", oaiUrl)
+	log.Info("Using OpenAI URL", zap.String("question", question))
 	req, err := http.NewRequestWithContext(ctx, "POST", oaiUrl,
 		bytes.NewReader(body))
 	if err != nil {
