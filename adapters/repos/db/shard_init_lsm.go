@@ -103,7 +103,7 @@ func (s *Shard) initNonVector(ctx context.Context, class *models.Class) error {
 			return fmt.Errorf("init shard %q: shard hashtree: %w", s.ID(), err)
 		}
 	} else if s.index.replicationEnabled() {
-		s.index.logger.Infof("async replication disabled on shard %q", s.ID())
+		s.index.logger.Info("async replication disabled on shard", zap.String("shard_id", s.ID()))
 	}
 
 	return nil
