@@ -70,7 +70,7 @@ func processSingleFile(name string) error {
 
 		fmt.Printf("👷 successfully updated: %s\n", name)
 	} else {
-		fmt.Printf("✅ already up to date: %s\n", name)
+		log.Info("already up to date", zap.String("name", name))
 	}
 	return nil
 }
