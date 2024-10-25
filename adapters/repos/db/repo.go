@@ -274,7 +274,7 @@ func (db *DB) DeleteIndex(className schema.ClassName) error {
 	delete(db.indices, indexID(className))
 
 	if err := db.promMetrics.DeleteClass(className.String()); err != nil {
-		db.logger.Error("can't delete prometheus metrics", err)
+		db.logger.Warn("Failed to delete Prometheus metrics", zap.String("class", className.String()), zap.Error(err))
 	}
 	return nil
 }
