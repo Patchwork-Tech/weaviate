@@ -51,7 +51,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 	dimensions := 64
 	vectors_size := 10000
 	queries_size := 100
-	fmt.Println("Sift1M PQ")
+	log.Info("Starting Sift1M PQ test", zap.String("path", path), zap.Int("efConstruction", efConstruction), zap.Int("ef", ef), zap.Int("maxNeighbors", maxNeighbors), zap.Int("segments", segments), zap.Int("dimensions", dimensions), zap.Int("vectors_size", vectors_size), zap.Int("queries_size", queries_size))
 	before := time.Now()
 	vectors, queries := testinghelpers.RandomVecs(vectors_size, queries_size, dimensions)
 	testinghelpers.Normalize(vectors)
