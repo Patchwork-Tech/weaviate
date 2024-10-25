@@ -152,7 +152,7 @@ func setupDebugHandlers(appState *state.State) {
 		}
 
 		if vidx == nil {
-			logger.WithField("shard", shardName).Error("vector index not found")
+			logger.Error("Failed to find vector index", zap.String("shard", shardName), zap.String("collection", colName), zap.String("vectorIndexID", vecIdxID))
 			http.Error(w, "vector index not found", http.StatusNotFound)
 			return
 		}
