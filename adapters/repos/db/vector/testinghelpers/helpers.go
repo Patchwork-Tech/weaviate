@@ -166,7 +166,7 @@ func ReadVecs(size int, queriesSize int, dimensions int, db string, path ...stri
 	}
 	vectors := readSiftFloat(fmt.Sprintf("%s/%s_base.fvecs", uri, db), size, dimensions)
 	queries := readSiftFloat(fmt.Sprintf("%s/%s_query.fvecs", uri, db), queriesSize, dimensions)
-	fmt.Printf(" done\n")
+	log.Info("Vectors read successfully", zap.String("database", db), zap.String("uri", uri), zap.Int("baseVectors", len(vectors)), zap.Int("queryVectors", len(queries)), zap.Int("dimensions", dimensions))
 	return vectors, queries
 }
 
