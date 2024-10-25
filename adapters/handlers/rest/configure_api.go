@@ -653,7 +653,7 @@ func configureAPI(api *operations.WeaviateAPI) http.Handler {
 		appState.APIKey, appState.OIDC)
 
 	api.Logger = func(msg string, args ...interface{}) {
-		appState.Logger.WithFields(logrus.Fields{"action": "restapi_management", "version": build.Version}).Infof(msg, args...)
+		appState.Logger.Info(msg, zap.String("action", "restapi_management"), zap.String("version", build.Version))
 	}
 
 	classifier := classification.New(appState.SchemaManager, appState.ClassificationRepo, appState.DB, // the DB is the vectorrepo
