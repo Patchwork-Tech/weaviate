@@ -114,7 +114,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 		wg := sync.WaitGroup{}
 		wg.Add(1)
 		index.UpdateUserConfig(uc, func() {
-			fmt.Printf("Time to compress: %s\n", time.Since(before))
+			log.Info("Time to compress", zap.Duration("duration", time.Since(before)))
 			fmt.Printf("Building the index took %s\n", time.Since(init))
 
 			var relevant uint64
