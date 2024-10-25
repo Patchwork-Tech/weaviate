@@ -851,7 +851,10 @@ func (m *Migrator) doInvertedIndexMissingTextFilterable(ctx context.Context, tas
 	}
 
 	if len(task.migrationState.MissingFilterableClass2Props) == 0 {
-		m.logMissingFilterable().Info("no classes to create filterable index, skipping")
+		m.logMissingFilterable().Info("No classes to create filterable index, skipping task",
+    zap.String("taskName", taskName),
+    zap.Bool("taskFound", taskFound),
+    zap.Int("missingFilterableClassCount", len(task.migrationState.MissingFilterableClass2Props)))
 		return nil
 	}
 
