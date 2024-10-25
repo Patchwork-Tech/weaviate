@@ -1463,7 +1463,7 @@ func limitResources(appState *state.State) {
 			// Set memory limit to 90% of the available memory
 			limit := int64(float64(memory.TotalMemory()) * 0.8)
 			debug.SetMemoryLimit(limit)
-			appState.Logger.WithField("limit", limit).Info("Set memory limit based on available memory")
+			appState.Logger.Info("Set memory limit based on available memory", zap.Int64("limit", limit), zap.Error(err))
 		} else {
 			appState.Logger.WithField("limit", limit).Info("Set memory limit")
 		}
