@@ -174,7 +174,7 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 
 	q, err := s.getIndexQueue(targetVector)
 	if err != nil {
-		s.index.logger.WithError(err).Warn("repair index: queue not found")
+		s.index.logger.Warn("repair index: queue not found", zap.Error(err), zap.String("targetVector", targetVector))
 		// queue was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
