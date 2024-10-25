@@ -30,7 +30,7 @@ func (h *hnsw) Dump(labels ...string) {
 	}
 	log.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", h.id)
-	fmt.Printf("Entrypoint: %d\n", h.entryPointID)
+	h.logger.Info("Entrypoint", zap.Int("entryPointID", h.entryPointID))
 	fmt.Printf("Max Level: %d\n", h.currentMaximumLayer)
 	fmt.Printf("Tombstones %v\n", h.tombstones)
 	fmt.Printf("\nNodes and Connections:\n")
