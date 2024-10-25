@@ -159,7 +159,7 @@ func Normalize(vectors [][]float32) {
 }
 
 func ReadVecs(size int, queriesSize int, dimensions int, db string, path ...string) ([][]float32, [][]float32) {
-	fmt.Printf("generating %d vectors...", size+queriesSize)
+	log.Info("Generating vectors", zap.Int("total_vectors", size+queriesSize), zap.Int("dimensions", dimensions), zap.String("database", db))
 	uri := db
 	if len(path) > 0 {
 		uri = fmt.Sprintf("%s/%s", path[0], uri)
