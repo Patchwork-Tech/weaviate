@@ -83,7 +83,7 @@ func requestFromProto(req *protocol.SearchRequest, getClass func(string) *models
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("clause: %+v\n", filter)
+		log.Info("Extracted filter for search request", zap.Any("filter", filter))
 		sr.Filters = &filters.LocalFilter{Root: &filter}
 	}
 	return sr, nil
