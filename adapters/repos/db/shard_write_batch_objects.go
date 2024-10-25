@@ -402,7 +402,12 @@ func (ob *objectsBatcher) storeSingleObjectInAdditionalStorage(ctx context.Conte
 		if err != nil {
 			entsentry.Recover(err)
 			ob.setErrorAtIndex(fmt.Errorf("an unexpected error occurred: %s", err), index)
-			fmt.Fprintf(os.Stderr, "panic: %s\n", err)
+			log.Error("Panic occurred during object storage",
+    zap.Error(err),
+    zap.Int("index", index),
+    zap.String("objectID", object.ID().String()),
+    zap.String("status", status.String())
+)
 			debug.PrintStack()
 		}
 	}()
