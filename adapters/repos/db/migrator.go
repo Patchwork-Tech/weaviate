@@ -83,7 +83,7 @@ func (m *Migrator) SetOffloadProvider(provider provider, moduleName string) {
 		m.logger.Debug(fmt.Sprintf("module %s is not enabled", moduleName))
 	}
 	m.cloud = cloud
-	m.logger.Info(fmt.Sprintf("module %s is enabled", moduleName))
+	m.logger.Info("Module enabled", zap.String("module", moduleName), zap.Bool("enabled", enabled))
 }
 
 func (m *Migrator) AddClass(ctx context.Context, class *models.Class,
