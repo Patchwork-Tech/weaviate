@@ -93,7 +93,7 @@ func TestDynamic(t *testing.T) {
 	assert.Equal(t, vectors_size, at)
 	assert.False(t, dynamic.Upgraded())
 	recall1, latency1 := recallAndLatency(queries, k, dynamic, truths)
-	fmt.Println(recall1, latency1)
+	log.Info("Recall and latency results", zap.Float64("recall", recall1), zap.Duration("latency", latency1))
 	assert.True(t, recall1 > 0.99)
 	wg := sync.WaitGroup{}
 	wg.Add(1)
