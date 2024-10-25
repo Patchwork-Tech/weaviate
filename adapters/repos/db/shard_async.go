@@ -156,7 +156,7 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 
 	vectorIndex := s.getVectorIndex(targetVector)
 	if vectorIndex == nil {
-		s.index.logger.Warn("repair index: vector index not found")
+		s.index.logger.Warn("repair index: vector index not found", zap.String("shard_id", s.ID()), zap.String("target_vector", targetVector))
 		// shard was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
