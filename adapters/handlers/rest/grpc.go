@@ -24,8 +24,7 @@ func createGrpcServer(state *state.State) *grpc.GRPCServer {
 func startGrpcServer(server *grpc.GRPCServer, state *state.State) {
 	enterrors.GoWrapper(func() {
 		if err := grpc.StartAndListen(server, state); err != nil {
-			state.Logger.WithField("action", "grpc_startup").WithError(err).
-				Fatal("failed to start grpc server")
+			state.Logger.Error("failed to start grpc server", zap.String("action", "grpc_startup"), zap.Error(err))
 		}
 	}, state.Logger)
 }
