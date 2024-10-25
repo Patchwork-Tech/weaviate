@@ -37,7 +37,7 @@ type BaseSlowReporter struct {
 
 func NewSlowQueryReporterFromEnv(logger logrus.FieldLogger) SlowQueryReporter {
 	if logger == nil {
-		fmt.Println("Unexpected nil logger for SlowQueryReporter. Reporter disabled.")
+		log.Warn("Unexpected nil logger for SlowQueryReporter. Reporter disabled.")
 		return &NoopSlowReporter{}
 	}
 
