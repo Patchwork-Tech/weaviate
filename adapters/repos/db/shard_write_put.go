@@ -474,7 +474,7 @@ func (s *Shard) updateInvertedIndexLSM(object *storobj.Object,
 	// if object updated (with or without docID changed)
 	if status.docIDChanged || status.docIDPreserved {
 		if err := s.subtractPropLengths(prevProps); err != nil {
-			s.index.logger.WithField("action", "subtractPropLengths").WithError(err).Error("could not subtract prop lengths")
+			s.index.logger.Warn("could not subtract prop lengths", zap.String("action", "subtractPropLengths"), zap.Error(err))
 		}
 	}
 
