@@ -173,7 +173,7 @@ func ReadVecs(size int, queriesSize int, dimensions int, db string, path ...stri
 func ReadQueries(queriesSize int) [][]float32 {
 	log.Info("Generating vectors", zap.Int("queriesSize", queriesSize))
 	queries := readSiftFloat("sift/sift_query.fvecs", queriesSize, 128)
-	fmt.Printf(" done\n")
+	log.Info("Finished generating vectors", zap.Int("queriesSize", queriesSize), zap.Int("actualSize", len(queries)))
 	return queries
 }
 
