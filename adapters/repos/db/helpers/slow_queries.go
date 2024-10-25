@@ -93,7 +93,7 @@ func (sq *BaseSlowReporter) LogIfSlow(startTime time.Time, fields map[string]any
 			fields = map[string]any{}
 		}
 		fields["took"] = took
-		sq.logger.WithFields(fields).Warn(fmt.Sprintf("Slow query detected (%s)", took.Round(time.Millisecond)))
+		sq.logger.Warn("Slow query detected", zap.Duration("took", took), zap.Time("startTime", startTime))
 	}
 }
 
