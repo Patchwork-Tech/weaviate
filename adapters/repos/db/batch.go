@@ -63,9 +63,10 @@ func (db *DB) BatchPutObjects(ctx context.Context, objs objects.BatchObjects,
 				db.logger.Warn(msg)
 				for _, origIdx := range queue.originalIndex {
 					if origIdx >= len(objs) {
-						db.logger.Errorf(
-							"batch add queue index out of bounds. len(objs) == %d, queue.originalIndex == %d",
-							len(objs), origIdx)
+						db.logger.Error("batch add queue index out of bounds",
+    zap.Int("objectsLength", len(objs)),
+    zap.Int("queueOriginalIndex", origIdx),
+    zap.String("class", class))
 						break
 					}
 					objs[origIdx].Err = fmt.Errorf(msg)
