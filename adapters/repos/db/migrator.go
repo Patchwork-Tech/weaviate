@@ -846,7 +846,7 @@ func (m *Migrator) doInvertedIndexMissingTextFilterable(ctx context.Context, tas
 
 	task := newShardInvertedReindexTaskMissingTextFilterable(m)
 	if err := task.init(); err != nil {
-		m.logMissingFilterable().WithError(err).Error("failed init missing text filterable task")
+		m.logMissingFilterable().Error("failed init missing text filterable task", zap.String("taskName", taskName), zap.Error(err))
 		return errors.Wrap(err, "failed init missing text filterable task")
 	}
 
