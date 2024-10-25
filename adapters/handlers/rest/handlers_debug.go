@@ -166,7 +166,7 @@ func setupDebugHandlers(appState *state.State) {
 
 		jsonBytes, err := json.Marshal(stats)
 		if err != nil {
-			logger.WithError(err).Error("marshal failed on stats")
+			logger.Error("Failed to marshal stats for vector index", zap.String("path", r.URL.Path), zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Error(err))
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
