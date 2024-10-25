@@ -213,7 +213,12 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 	// there was an uncaught error during the iteration.
 	// in any case, we should not touch the index.
 	if visited.Len() == 0 {
-		s.index.logger.Warn("repair index: empty LSM store")
+		s.index.logger.Warn("repair index: empty LSM store",
+    zap.Time("start_time", start),
+    zap.Uint64("max_doc_id", maxDocID),
+    zap.Int("visited_count", visited.Len()),
+    zap.String("shard_id", s.ID()),
+    zap.String("target_vector", targetVector))
 		return nil
 	}
 
