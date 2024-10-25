@@ -45,7 +45,7 @@ func (h *hnsw) Dump(labels ...string) {
 		}
 	}
 
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 }
 
 // DumpJSON to stdout for debugging purposes
