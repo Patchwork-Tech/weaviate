@@ -68,7 +68,7 @@ func processSingleFile(name string) error {
 			return fmt.Errorf("%s: %v", name, err)
 		}
 
-		fmt.Printf("👷 successfully updated: %s\n", name)
+		log.Info("successfully updated", zap.String("file", name))
 	} else {
 		fmt.Printf("✅ already up to date: %s\n", name)
 	}
