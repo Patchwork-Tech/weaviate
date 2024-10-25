@@ -81,7 +81,7 @@ func (p *GenerateProvider) parseGenerateArguments(args []*ast.Argument, class *m
 
 		default:
 			// ignore what we don't recognize
-			log.Printf("Igonore not recognized value: %v", arg.Name.Value)
+			log.Warn("Ignore not recognized value", zap.String("value", arg.Name.Value))
 		}
 	}
 
