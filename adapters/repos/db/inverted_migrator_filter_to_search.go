@@ -96,7 +96,7 @@ func (m *filterableToSearchableMigrator) migrate(ctx context.Context) error {
 
 	err = eg.Wait()
 	if err != nil {
-		m.log().WithError(err).Error("failed migrating classes")
+		m.log().Error("failed migrating classes", zap.Error(err), zap.Bool("migrationStateUpdated", migrationStateUpdated))
 	}
 
 	// save state regardless of previous error
