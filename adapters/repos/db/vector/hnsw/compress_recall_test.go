@@ -131,7 +131,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 
 			recall := float32(relevant) / float32(retrieved)
 			latency := float32(querying.Microseconds()) / float32(queries_size)
-			fmt.Println(recall, latency)
+			log.Info("", zap.Float32("recall", recall), zap.Float32("latency", latency))
 			assert.True(t, recall > 0.9)
 
 			err := os.RemoveAll(path)
