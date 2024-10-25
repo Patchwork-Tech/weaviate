@@ -210,7 +210,7 @@ func startWeaviate(c *http.Client, url string) bool {
 	alreadyRunning := err == nil && responseStartedCode == 200
 
 	if alreadyRunning {
-		fmt.Print("Weaviate instance already running.\n")
+		log.Info("Weaviate instance already running", zap.String("url", url), zap.Int("responseCode", responseStartedCode), zap.Bool("alreadyRunning", alreadyRunning))
 		return alreadyRunning
 	}
 
