@@ -654,7 +654,7 @@ func (q *IndexQueue) checkCompressionSettings() bool {
 // related to this queue.
 func (q *IndexQueue) PauseIndexing() {
 	if !q.paused.CompareAndSwap(false, true) {
-		q.Logger.Warn("attempted to pause indexing, but it is already paused")
+		q.Logger.Info("attempted to pause indexing, but it is already paused")
 		return
 	}
 	q.Logger.Debug("pausing indexing, waiting for the current tasks to finish")
