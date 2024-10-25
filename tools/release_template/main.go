@@ -51,7 +51,7 @@ func printRelaeseNotes(languages []language, version string) {
     zap.Strings("languages", languages),
     zap.String("documentationURL", "https://weaviate.io/developers/weaviate/installation/docker-compose"))
 	fmt.Printf("\n## Breaking Changes\n*none*\n")
-	fmt.Printf("\n## New Features\n*none*\n")
+	log.Info("New Features", zap.String("version", version), zap.Int("supportedLanguages", len(languages)))
 	fmt.Printf("\n## Fixes\n*none*\n")
 }
 
