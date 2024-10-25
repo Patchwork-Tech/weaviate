@@ -324,7 +324,7 @@ func (dynamic *dynamic) Dump(labels ...string) {
 		dynamic.logger.Info("--------------------------------------------------")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
-	fmt.Printf("--------------------------------------------------\n")
+	dynamic.logger.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", dynamic.id)
 	fmt.Printf("--------------------------------------------------\n")
 }
