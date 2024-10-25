@@ -171,7 +171,7 @@ func setupDebugHandlers(appState *state.State) {
 			return
 		}
 
-		logger.Info("Stats on HNSW started")
+		logger.Info("HNSW stats retrieval successful", zap.String("path", r.URL.Path), zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Int("statCount", stats.Count()), zap.Int("statDim", stats.Dim()))
 
 		w.WriteHeader(http.StatusOK)
 		w.Write(jsonBytes)
