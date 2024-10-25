@@ -922,7 +922,7 @@ func (m *Migrator) doInvertedIndexMissingTextFilterable(ctx context.Context, tas
 		return errors.Wrap(err, "failed missing text filterable task")
 	}
 
-	m.logMissingFilterable().Info("finished missing text filterable task")
+	m.logMissingFilterable().Info("finished missing text filterable task", zap.String("taskName", taskName), zap.Int("processedClassesCount", len(task.migrationState.MissingFilterableClass2Props)))
 	return nil
 }
 
