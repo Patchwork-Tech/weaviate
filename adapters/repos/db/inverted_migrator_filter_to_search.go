@@ -173,7 +173,7 @@ func (m *filterableToSearchableMigrator) migrateClass(ctx context.Context, index
 				shard2PropsToFix[shard.Name()][prop.Name] = struct{}{}
 				uniquePropsToFix[prop.Name] = struct{}{}
 			} else if err != nil {
-				m.logShard(shard).WithError(err).Error("failed discovering props to fix")
+				m.logShard(shard).Error("failed discovering props to fix", zap.Error(err), zap.String("prop", prop.Name), zap.String("className", className), zap.String("index", index.Config.ClassName.String()))
 				return errors.Wrap(err, "failed discovering props to fix")
 			}
 			return nil
