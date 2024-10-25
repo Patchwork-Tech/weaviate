@@ -104,7 +104,7 @@ func TestDynamic(t *testing.T) {
 	shouldUpgrade, _ = dynamic.ShouldUpgrade()
 	assert.False(t, shouldUpgrade)
 	recall2, latency2 := recallAndLatency(queries, k, dynamic, truths)
-	fmt.Println(recall2, latency2)
+	log.Info("Recall and latency after upgrade", zap.Float64("recall", recall2), zap.Duration("latency", latency2))
 	assert.True(t, recall2 > 0.9)
 	assert.True(t, latency1 > latency2)
 }
