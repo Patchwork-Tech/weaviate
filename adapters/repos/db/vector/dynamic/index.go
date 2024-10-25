@@ -326,7 +326,7 @@ func (dynamic *dynamic) Dump(labels ...string) {
 	}
 	dynamic.logger.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", dynamic.id)
-	fmt.Printf("--------------------------------------------------\n")
+	dynamic.logger.Info("--------------------------------------------------")
 }
 
 func (dynamic *dynamic) DistanceBetweenVectors(x, y []float32) (float32, error) {
