@@ -1300,7 +1300,7 @@ func (i *indices) postShardFile() http.Handler {
 			return
 		}
 
-		fmt.Printf("%s/%s/%s n=%d\n", index, shard, filename, n)
+		log.Info("Shard file posted", zap.String("index", index), zap.String("shard", shard), zap.String("filename", filename), zap.Int64("bytes", n))
 
 		w.WriteHeader(http.StatusNoContent)
 	})
