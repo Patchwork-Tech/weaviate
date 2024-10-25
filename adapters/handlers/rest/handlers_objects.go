@@ -681,7 +681,7 @@ func (h *objectHandlers) patchObjectDeprecated(params objects.ObjectsPatchParams
 func (h *objectHandlers) updateObjectDeprecated(params objects.ObjectsUpdateParams,
 	principal *models.Principal,
 ) middleware.Responder {
-	h.logger.Warn("deprecated endpoint: ", "PUT "+params.HTTPRequest.URL.Path)
+	h.logger.Warn("deprecated endpoint", zap.String("method", "PUT"), zap.String("path", params.HTTPRequest.URL.Path))
 	ps := objects.ObjectsClassPutParams{
 		HTTPRequest: params.HTTPRequest,
 		ClassName:   params.Body.Class,
