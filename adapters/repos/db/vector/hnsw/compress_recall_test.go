@@ -51,7 +51,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 	dimensions := 64
 	vectors_size := 10000
 	queries_size := 100
-	fmt.Println("Sift1M PQ")
+	log.Info("Starting Sift1M PQ test", zap.String("path", path), zap.Int("efConstruction", efConstruction), zap.Int("ef", ef), zap.Int("maxNeighbors", maxNeighbors), zap.Int("segments", segments), zap.Int("dimensions", dimensions), zap.Int("vectors_size", vectors_size), zap.Int("queries_size", queries_size))
 	before := time.Now()
 	vectors, queries := testinghelpers.RandomVecs(vectors_size, queries_size, dimensions)
 	testinghelpers.Normalize(vectors)
@@ -71,7 +71,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 		compressionhelpers.Concurrently(logger, uint64(len(queries)), func(i uint64) {
 			truths[i], _ = testinghelpers.BruteForce(logger, vectors, queries[i], k, distanceWrapper(distancer))
 		})
-		fmt.Printf("generating data took %s\n", time.Since(before))
+		logger.Info("Data generation completed", zap.Duration("duration", time.Since(before)))
 
 		uc := ent.UserConfig{
 			MaxConnections:        maxNeighbors,
@@ -103,7 +103,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 			index.Add(id, vectors[id])
 		})
 		before = time.Now()
-		fmt.Println("Start compressing...")
+		log.Info("Start compressing...")
 		uc.PQ = ent.PQConfig{
 			Enabled:   true,
 			Segments:  dimensions / segments,
@@ -114,7 +114,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 		wg := sync.WaitGroup{}
 		wg.Add(1)
 		index.UpdateUserConfig(uc, func() {
-			fmt.Printf("Time to compress: %s\n", time.Since(before))
+			log.Info("Time to compress", zap.Duration("duration", time.Since(before)))
 			fmt.Printf("Building the index took %s\n", time.Since(init))
 
 			var relevant uint64
@@ -131,12 +131,12 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 
 			recall := float32(relevant) / float32(retrieved)
 			latency := float32(querying.Microseconds()) / float32(queries_size)
-			fmt.Println(recall, latency)
+			log.Info("", zap.Float32("recall", recall), zap.Float32("latency", latency))
 			assert.True(t, recall > 0.9)
 
 			err := os.RemoveAll(path)
 			if err != nil {
-				fmt.Println(err)
+				logger.Error("Error removing temporary directory", zap.Error(err))
 			}
 			wg.Done()
 		})

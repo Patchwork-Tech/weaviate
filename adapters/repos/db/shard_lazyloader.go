@@ -116,7 +116,7 @@ func (l *LazyLoadShard) Load(ctx context.Context) error {
 		l.shardOpts.class, l.shardOpts.jobQueueCh, l.shardOpts.indexCheckpoints)
 	if err != nil {
 		msg := fmt.Sprintf("Unable to load shard %s: %v", l.shardOpts.name, err)
-		l.shardOpts.index.logger.WithField("error", "shard_load").WithError(err).Error(msg)
+		l.shardOpts.index.logger.Error("Unable to load shard", zap.String("shard", l.shardOpts.name), zap.Error(err))
 		return errors.New(msg)
 	}
 	l.shard = shard

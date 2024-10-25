@@ -111,9 +111,9 @@ func main() {
 			"This is a change of "+fmt.Sprintf("%.2f", 100*float32(totalNewRuntime-totalOldRuntime)/float32(totalNewRuntime))+"%.\n"+
 			"Please update the benchmark results if necessary.\n\n",
 	)
-	fmt.Fprint(os.Stdout, "Runtime for individual steps:.\n")
+	log.Info("Runtime for individual steps:")
 	for name, time := range newRuntime {
-		fmt.Fprint(os.Stdout, "Runtime for "+name+" is "+fmt.Sprint(time)+"ms.\n")
+		log.Info("Runtime for step", zap.String("name", name), zap.Int64("time", time))
 	}
 
 	// Return with error code if runtime regressed and corresponding flag was set
@@ -177,7 +177,7 @@ func command(app string, arguments []string, waitForCompletion bool) error {
 func readCurrentBenchmarkResults() benchmarkResult {
 	benchmarkFile, err := os.Open("benchmark_results.json")
 	if err != nil {
-		fmt.Print("No benchmark file present.")
+		log.Warn("No benchmark file present", zap.Error(err))
 		return make(benchmarkResult)
 	}
 	defer benchmarkFile.Close()
@@ -191,7 +191,7 @@ func readCurrentBenchmarkResults() benchmarkResult {
 }
 
 func tearDownWeaviate() error {
-	fmt.Print("Shutting down weaviate.\n")
+	log.Info("Shutting down weaviate.")
 	app := "docker-compose"
 	arguments := []string{
 		"down",
@@ -210,11 +210,11 @@ func startWeaviate(c *http.Client, url string) bool {
 	alreadyRunning := err == nil && responseStartedCode == 200
 
 	if alreadyRunning {
-		fmt.Print("Weaviate instance already running.\n")
+		log.Info("Weaviate instance already running", zap.String("url", url), zap.Int("responseCode", responseStartedCode), zap.Bool("alreadyRunning", alreadyRunning))
 		return alreadyRunning
 	}
 
-	fmt.Print("(Re-) build and start weaviate.\n")
+	log.Info("(Re-) build and start weaviate", zap.String("url", url), zap.Int("responseStartedCode", responseStartedCode), zap.Bool("alreadyRunning", alreadyRunning), zap.Error(err))
 	cmd := "./tools/test/run_ci_server.sh"
 	if err := command(cmd, []string{}, true); err != nil {
 		panic(errors.Wrap(err, "Command to (re-) build and start weaviate failed"))

@@ -805,12 +805,12 @@ func (index *flat) PostStartup() {
 
 func (index *flat) Dump(labels ...string) {
 	if len(labels) > 0 {
-		fmt.Printf("--------------------------------------------------\n")
+		log.Info("--------------------------------------------------")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", index.id)
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 }
 
 func (index *flat) DistanceBetweenVectors(x, y []float32) (float32, error) {

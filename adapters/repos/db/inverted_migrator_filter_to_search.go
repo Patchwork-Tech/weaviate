@@ -96,14 +96,14 @@ func (m *filterableToSearchableMigrator) migrate(ctx context.Context) error {
 
 	err = eg.Wait()
 	if err != nil {
-		m.log().WithError(err).Error("failed migrating classes")
+		m.log().Error("failed migrating classes", zap.Error(err), zap.Bool("migrationStateUpdated", migrationStateUpdated))
 	}
 
 	// save state regardless of previous error
 	if migrationStateUpdated {
 		m.log().Debug("saving migration state")
 		if err := m.files.saveMigrationState(migrationState); err != nil {
-			m.log().WithError(err).Error("failed saving migration state")
+			m.log().Error("failed saving migration state", zap.Error(err), zap.Bool("migrationStateUpdated", migrationStateUpdated))
 			return errors.Wrap(err, "failed saving migration state")
 		}
 	}
@@ -113,7 +113,7 @@ func (m *filterableToSearchableMigrator) migrate(ctx context.Context) error {
 	}
 
 	if err := m.files.createMigrationSkipFlag(); err != nil {
-		m.log().WithError(err).Error("failed creating migration skip flag")
+		m.log().Error("failed creating migration skip flag", zap.Error(err), zap.Bool("migrationStateUpdated", migrationStateUpdated))
 		return errors.Wrap(err, "failed creating migration skip flag")
 	}
 
@@ -173,7 +173,7 @@ func (m *filterableToSearchableMigrator) migrateClass(ctx context.Context, index
 				shard2PropsToFix[shard.Name()][prop.Name] = struct{}{}
 				uniquePropsToFix[prop.Name] = struct{}{}
 			} else if err != nil {
-				m.logShard(shard).WithError(err).Error("failed discovering props to fix")
+				m.logShard(shard).Error("failed discovering props to fix", zap.Error(err), zap.String("prop", prop.Name), zap.String("className", className), zap.String("index", index.Config.ClassName.String()))
 				return errors.Wrap(err, "failed discovering props to fix")
 			}
 			return nil
@@ -199,7 +199,7 @@ func (m *filterableToSearchableMigrator) migrateClass(ctx context.Context, index
 
 		eg.Go(func() error {
 			if err := m.migrateShard(ctx, shard, props); err != nil {
-				m.logShard(shard).WithError(err).Error("failed migrating shard")
+				m.logShard(shard).Error("failed migrating shard", zap.Error(err), zap.String("shardName", shard.Name()), zap.String("className", index.Config.ClassName.String()), zap.Int("numPropsToFix", len(props)))
 				return errors.Wrap(err, "failed migrating shard")
 			}
 			return nil

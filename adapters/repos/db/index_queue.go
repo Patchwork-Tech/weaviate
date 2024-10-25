@@ -364,7 +364,7 @@ func (q *IndexQueue) Delete(ids ...uint64) error {
 		if q.index.ContainsNode(ids[i]) {
 			err := q.index.Delete(ids[i])
 			if err != nil {
-				q.Logger.WithError(err).Error("failed to delete vector from index")
+				q.Logger.Error("failed to delete vector from index", zap.Error(err), zap.Uint64("id", ids[i]), zap.Int("index", i), zap.Uint64("shardID", q.shardID))
 			}
 		} else {
 			q.queue.Delete(ids[i])
@@ -422,7 +422,7 @@ func (q *IndexQueue) indexer() {
 
 			status, err := q.Shard.compareAndSwapStatusIndexingAndReady(storagestate.StatusReady.String(), storagestate.StatusIndexing.String())
 			if status != storagestate.StatusIndexing || err != nil {
-				q.Logger.WithField("status", status).WithError(err).Warn("failed to set shard status to 'indexing', trying again in " + q.IndexInterval.String())
+				q.Logger.Warn("failed to set shard status to 'indexing', trying again", zap.String("status", status), zap.Error(err), zap.Duration("retryInterval", q.IndexInterval))
 				q.indexLock.RUnlock()
 				continue
 			}
@@ -635,7 +635,13 @@ func (q *IndexQueue) checkCompressionSettings() bool {
 		q.PauseIndexing()
 		err := ci.Upgrade(q.ResumeIndexing)
 		if err != nil {
-			q.Logger.WithError(err).Error("failed to upgrade")
+			q.Logger.Error("failed to upgrade index",
+    zap.Error(err),
+    zap.Bool("shouldUpgrade", shouldUpgrade),
+    zap.Int64("shouldUpgradeAt", int64(shouldUpgradeAt)),
+    zap.Uint64("alreadyIndexed", q.index.AlreadyIndexed()),
+    zap.Any("shardID", q.ShardID),
+    zap.Any("targetVector", q.TargetVector))
 		}
 
 		return true
@@ -648,7 +654,7 @@ func (q *IndexQueue) checkCompressionSettings() bool {
 // related to this queue.
 func (q *IndexQueue) PauseIndexing() {
 	if !q.paused.CompareAndSwap(false, true) {
-		q.Logger.Warn("attempted to pause indexing, but it is already paused")
+		q.Logger.Info("attempted to pause indexing, but it is already paused")
 		return
 	}
 	q.Logger.Debug("pausing indexing, waiting for the current tasks to finish")
@@ -668,7 +674,7 @@ func (q *IndexQueue) Wait() {
 // resume indexing
 func (q *IndexQueue) ResumeIndexing() {
 	if !q.paused.CompareAndSwap(true, false) {
-		q.Logger.Warn("attempted to resume indexing, but it is already running")
+		q.Logger.Info("attempted to resume indexing, but it is already running")
 		return
 	}
 	q.Logger.Debug("indexing resumed")
@@ -900,7 +906,7 @@ func (q *vectorQueue) persistCheckpoint(minID uint64) {
 
 	err := q.IndexQueue.Checkpoints.UpdateIfNewer(q.IndexQueue.shardID, q.IndexQueue.targetVector, checkpoint)
 	if err != nil {
-		q.IndexQueue.Logger.WithError(err).Warn("checkpoint not updated")
+		q.IndexQueue.Logger.Warn("checkpoint not updated", zap.Error(err), zap.Uint64("shardID", q.IndexQueue.shardID), zap.String("targetVector", q.IndexQueue.targetVector), zap.Int("fullChunks", cl), zap.Uint64("delta", delta), zap.Uint64("checkpoint", checkpoint), zap.Uint64("minID", minID))
 	}
 }
 

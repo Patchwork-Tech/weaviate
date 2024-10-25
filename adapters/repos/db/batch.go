@@ -36,7 +36,7 @@ func (db *DB) BatchPutObjects(ctx context.Context, objs objects.BatchObjects,
 	indexByClass := make(map[string]*Index)
 
 	if err := db.memMonitor.CheckAlloc(estimateBatchMemory(objs)); err != nil {
-		db.logger.WithError(err).Errorf("memory pressure: cannot process batch")
+		db.logger.Error("memory pressure: cannot process batch", zap.Error(err), zap.Int("batchSize", len(objs)), zap.Uint64("schemaVersion", schemaVersion))
 		return nil, fmt.Errorf("cannot process batch: %w", err)
 	}
 
@@ -60,12 +60,13 @@ func (db *DB) BatchPutObjects(ctx context.Context, objs objects.BatchObjects,
 			index, ok := db.indices[indexID(schema.ClassName(class))]
 			if !ok {
 				msg := fmt.Sprintf("could not find index for class %v. It might have been deleted in the meantime", class)
-				db.logger.Warn(msg)
+				db.logger.Warn("Could not find index for class", zap.String("class", class), zap.Uint64("schemaVersion", schemaVersion), zap.Int("batchSize", len(objs)))
 				for _, origIdx := range queue.originalIndex {
 					if origIdx >= len(objs) {
-						db.logger.Errorf(
-							"batch add queue index out of bounds. len(objs) == %d, queue.originalIndex == %d",
-							len(objs), origIdx)
+						db.logger.Error("batch add queue index out of bounds",
+    zap.Int("objectsLength", len(objs)),
+    zap.Int("queueOriginalIndex", origIdx),
+    zap.String("class", class))
 						break
 					}
 					objs[origIdx].Err = fmt.Errorf(msg)
@@ -195,7 +196,17 @@ func (db *DB) BatchDeleteObjects(ctx context.Context, params objects.BatchDelete
 	}
 
 	if err := db.memMonitor.CheckAlloc(memwatch.EstimateObjectDeleteMemory() * matches); err != nil {
-		db.logger.WithError(err).Errorf("memory pressure: cannot process batch delete object")
+		db.logger.Error("memory pressure: cannot process batch delete object",
+    zap.Error(err),
+    zap.String("className", className),
+    zap.Int64("matches", matches),
+    zap.Int64("limit", db.config.QueryMaximumResults),
+    zap.String("tenant", tenant),
+    zap.Uint64("schemaVersion", schemaVersion),
+    zap.Int("shardCount", len(shardDocIDs)),
+    zap.Int("totalDocuments", len(toDelete)),
+    zap.Bool("dryRun", params.DryRun),
+    zap.Bool("hasFilters", len(params.Filters) > 0))
 		return objects.BatchDeleteResult{}, fmt.Errorf("cannot process batch delete object: %w", err)
 	}
 

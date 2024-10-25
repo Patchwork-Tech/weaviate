@@ -37,7 +37,7 @@ type BaseSlowReporter struct {
 
 func NewSlowQueryReporterFromEnv(logger logrus.FieldLogger) SlowQueryReporter {
 	if logger == nil {
-		fmt.Println("Unexpected nil logger for SlowQueryReporter. Reporter disabled.")
+		log.Warn("Unexpected nil logger for SlowQueryReporter. Reporter disabled.")
 		return &NoopSlowReporter{}
 	}
 
@@ -45,7 +45,7 @@ func NewSlowQueryReporterFromEnv(logger logrus.FieldLogger) SlowQueryReporter {
 	if enabledStr, ok := os.LookupEnv(enabledEnvVar); ok {
 		// TODO: Log warning if bool can't be parsed
 		enabled, _ = strconv.ParseBool(enabledStr)
-		fmt.Println("en", enabledStr, enabled)
+		logger.Info("Slow query reporter configuration", zap.String("enabledStr", enabledStr), zap.Bool("enabled", enabled), zap.Bool("envVarFound", ok))
 	}
 	if !enabled {
 		return &NoopSlowReporter{}
@@ -55,7 +55,12 @@ func NewSlowQueryReporterFromEnv(logger logrus.FieldLogger) SlowQueryReporter {
 	if thresholdStr, ok := os.LookupEnv(thresholdEnvVar); ok {
 		thresholdP, err := time.ParseDuration(thresholdStr)
 		if err != nil {
-			logger.WithField("action", "startup").Warningf("Unexpected value \"%s\" for %s. Please set a duration (i.e. 10s). Continuing with default value (%s).", thresholdStr, thresholdEnvVar, threshold)
+			log.Warn("Unexpected value for threshold environment variable", 
+    zap.String("action", "startup"),
+    zap.String("thresholdValue", thresholdStr),
+    zap.String("thresholdEnvVar", thresholdEnvVar),
+    zap.String("defaultThreshold", threshold.String()),
+    zap.Error(err))
 		} else {
 			threshold = thresholdP
 		}
@@ -88,7 +93,7 @@ func (sq *BaseSlowReporter) LogIfSlow(startTime time.Time, fields map[string]any
 			fields = map[string]any{}
 		}
 		fields["took"] = took
-		sq.logger.WithFields(fields).Warn(fmt.Sprintf("Slow query detected (%s)", took.Round(time.Millisecond)))
+		sq.logger.Warn("Slow query detected", zap.Duration("took", took), zap.Time("startTime", startTime))
 	}
 }
 

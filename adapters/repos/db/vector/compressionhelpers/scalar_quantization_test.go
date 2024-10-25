@@ -57,7 +57,13 @@ func Test_NoRaceSQDistance(t *testing.T) {
 		assert.Nil(t, err)
 		if err == nil {
 			assert.True(t, math.Abs(float64(expectedDist-dist)) < 0.01)
-			fmt.Println(expectedDist-dist, expectedDist, dist)
+			log.Info("Distance comparison for ScalarQuantizer",
+    zap.String("distancer", fmt.Sprintf("%T", distancer)),
+    zap.Float32("expected_distance", expectedDist),
+    zap.Float32("actual_distance", dist),
+    zap.Float32("difference", expectedDist-dist),
+    zap.Any("vector1", vec1),
+    zap.Any("vector2", vec2))
 		}
 	}
 }
@@ -120,7 +126,14 @@ func Test_NoRaceRandomSQDistanceFloatToByte(t *testing.T) {
 
 		recall := float32(relevant) / float32(k*len(queries))
 		latency := float32(ellapsed.Microseconds()) / float32(len(queries))
-		fmt.Println(distancer.Type(), recall, latency)
+		log.Info("Test results for random SQ distance float to byte",
+    zap.String("distancer_type", distancer.Type()),
+    zap.Float32("recall", recall),
+    zap.Float32("latency_us", latency),
+    zap.Int("dataset_size", vSize),
+    zap.Int("num_queries", qSize),
+    zap.Int("vector_dimensions", dims),
+    zap.Int("k_nearest_neighbors", k))
 		assert.GreaterOrEqual(t, recall, float32(0.95), distancer.Type())
 	}
 }
@@ -176,7 +189,15 @@ func Test_NoRaceRandomSQDistanceByteToByte(t *testing.T) {
 
 		recall := float32(relevant) / float32(k*len(queries))
 		latency := float32(ellapsed.Microseconds()) / float32(len(queries))
-		fmt.Println(distancer.Type(), recall, latency)
+		log.Info("Test results",
+    zap.String("distancer_type", distancer.Type()),
+    zap.Float32("recall", recall),
+    zap.Float32("latency", latency),
+    zap.Int("vector_size", vSize),
+    zap.Int("query_size", qSize),
+    zap.Int("dimensions", dims),
+    zap.Int("k", k)
+)
 		assert.GreaterOrEqual(t, recall, float32(0.95), distancer.Type())
 	}
 }

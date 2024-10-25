@@ -653,7 +653,7 @@ func configureAPI(api *operations.WeaviateAPI) http.Handler {
 		appState.APIKey, appState.OIDC)
 
 	api.Logger = func(msg string, args ...interface{}) {
-		appState.Logger.WithFields(logrus.Fields{"action": "restapi_management", "version": build.Version}).Infof(msg, args...)
+		appState.Logger.Info(msg, zap.String("action", "restapi_management"), zap.String("version", build.Version))
 	}
 
 	classifier := classification.New(appState.SchemaManager, appState.ClassificationRepo, appState.DB, // the DB is the vectorrepo
@@ -1406,7 +1406,7 @@ func setupGoProfiling(config config.Config, logger logrus.FieldLogger) {
 	enterrors.GoWrapper(func() {
 		portNumber := config.Profiling.Port
 		if portNumber == 0 {
-			fmt.Println(http.ListenAndServe(":6060", nil))
+			logger.Error("Failed to start profiling HTTP server on default port", zap.Int("defaultPort", 6060), zap.Error(http.ListenAndServe(":6060", nil)))
 		} else {
 			http.ListenAndServe(fmt.Sprintf(":%d", portNumber), nil)
 		}
@@ -1459,17 +1459,16 @@ func limitResources(appState *state.State) {
 
 		limit, err := memlimit.SetGoMemLimit(0.8)
 		if err != nil {
-			appState.Logger.WithError(err).Warnf("Unable to set memory limit from cgroups: %v", err)
+			appState.Logger.Warn("Unable to set memory limit from cgroups", zap.Error(err))
 			// Set memory limit to 90% of the available memory
 			limit := int64(float64(memory.TotalMemory()) * 0.8)
 			debug.SetMemoryLimit(limit)
-			appState.Logger.WithField("limit", limit).Info("Set memory limit based on available memory")
+			appState.Logger.Info("Set memory limit based on available memory", zap.Int64("limit", limit), zap.Error(err))
 		} else {
 			appState.Logger.WithField("limit", limit).Info("Set memory limit")
 		}
 	} else {
-		appState.Logger.Info("No resource limits set, weaviate will use all available memory and CPU. " +
-			"To limit resources, set LIMIT_RESOURCES=true")
+		appState.Logger.Info("No resource limits set, weaviate will use all available memory and CPU. To limit resources, set LIMIT_RESOURCES=true")
 	}
 }
 

@@ -79,7 +79,15 @@ func TestBinaryQuantizerRecall(t *testing.T) {
 	})
 	recall := float32(hits) / float32(k*len(queryVecs))
 	latency := float32(duration.Microseconds()) / float32(len(queryVecs))
-	fmt.Println(recall, latency)
+	log.Info("Binary quantizer recall test results",
+    zap.Float32("recall", recall),
+    zap.Float32("latency_us", latency),
+    zap.Int("k", k),
+    zap.Int("corrected_k", correctedK),
+    zap.Int("vector_count", len(vectors)),
+    zap.Int("query_count", len(queryVecs)),
+    zap.String("distance_provider", "cosine"),
+    zap.String("quantizer", "binary"))
 	assert.True(t, recall > 0.7)
 }
 

@@ -64,7 +64,7 @@ func setupDebugHandlers(appState *state.State) {
 			return
 		}
 
-		logger.WithField("shard", shardName).Info("reindexing started")
+		logger.Info("reindexing started", zap.String("shard", shardName), zap.String("collection", colName), zap.String("targetVector", targetVector))
 
 		w.WriteHeader(http.StatusAccepted)
 	}))
@@ -86,7 +86,7 @@ func setupDebugHandlers(appState *state.State) {
 
 		idx := appState.DB.GetIndex(schema.ClassName(colName))
 		if idx == nil {
-			logger.WithField("collection", colName).Error("collection not found")
+			logger.Error("Failed to retrieve collection", zap.String("collection", colName))
 			http.Error(w, "collection not found", http.StatusNotFound)
 			return
 		}
@@ -118,7 +118,7 @@ func setupDebugHandlers(appState *state.State) {
 		path := strings.TrimSpace(strings.TrimPrefix(r.URL.Path, "/debug/stats/collection/"))
 		parts := strings.Split(path, "/")
 		if len(parts) < 3 || len(parts) > 5 || parts[1] != "shards" {
-			logger.WithField("parts", parts).Info("invalid path")
+			logger.Warn("Invalid path in debug stats collection request", zap.Strings("parts", parts), zap.String("path", path))
 			http.Error(w, "invalid path", http.StatusNotFound)
 			return
 		}
@@ -138,7 +138,7 @@ func setupDebugHandlers(appState *state.State) {
 
 		shard := idx.GetShard(shardName)
 		if shard == nil {
-			logger.WithField("shard", shardName).Error("shard not found")
+			logger.Warn("Failed to retrieve shard for collection statistics", zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Strings("pathParts", parts))
 			http.Error(w, "shard not found", http.StatusNotFound)
 			return
 		}
@@ -152,26 +152,26 @@ func setupDebugHandlers(appState *state.State) {
 		}
 
 		if vidx == nil {
-			logger.WithField("shard", shardName).Error("vector index not found")
+			logger.Error("Failed to find vector index", zap.String("shard", shardName), zap.String("collection", colName), zap.String("vectorIndexID", vecIdxID))
 			http.Error(w, "vector index not found", http.StatusNotFound)
 			return
 		}
 
 		stats, err := vidx.Stats()
 		if err != nil {
-			logger.Error(err)
+			logger.Error("Failed to get vector index stats", zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Error(err))
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		jsonBytes, err := json.Marshal(stats)
 		if err != nil {
-			logger.WithError(err).Error("marshal failed on stats")
+			logger.Error("Failed to marshal stats for vector index", zap.String("path", r.URL.Path), zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Error(err))
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		logger.Info("Stats on HNSW started")
+		logger.Info("HNSW stats retrieval successful", zap.String("path", r.URL.Path), zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Int("statCount", stats.Count()), zap.Int("statDim", stats.Dim()))
 
 		w.WriteHeader(http.StatusOK)
 		w.Write(jsonBytes)

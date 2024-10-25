@@ -1300,7 +1300,7 @@ func (i *indices) postShardFile() http.Handler {
 			return
 		}
 
-		fmt.Printf("%s/%s/%s n=%d\n", index, shard, filename, n)
+		log.Info("Shard file posted", zap.String("index", index), zap.String("shard", shard), zap.String("filename", filename), zap.Int64("bytes", n))
 
 		w.WriteHeader(http.StatusNoContent)
 	})
@@ -1309,7 +1309,7 @@ func (i *indices) postShardFile() http.Handler {
 func (i *indices) postShard() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		args := i.regexpShard.FindStringSubmatch(r.URL.Path)
-		fmt.Println(args)
+		i.logger.Info("Shard creation request received", zap.Strings("args", args))
 		if len(args) != 3 {
 			http.Error(w, "invalid URI", http.StatusBadRequest)
 			return

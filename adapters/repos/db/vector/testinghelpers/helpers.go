@@ -107,14 +107,14 @@ func readSiftFloat(file string, maxObjects int, vectorLengthFloat int) [][]float
 }
 
 func ReadSiftVecsFrom(path string, size int, dimensions int) [][]float32 {
-	fmt.Printf("generating %d vectors...", size)
+	log.Info("Generating vectors", zap.Int("size", size), zap.String("path", path), zap.Int("dimensions", dimensions))
 	vectors := readSiftFloat(path, size, dimensions)
-	fmt.Printf(" done\n")
+	log.Info("Finished reading SIFT vectors", zap.Int("vectorsRead", len(vectors)), zap.String("sourcePath", path), zap.Int("expectedVectors", size), zap.Int("dimensions", dimensions))
 	return vectors
 }
 
 func RandomVecs(size int, queriesSize int, dimensions int) ([][]float32, [][]float32) {
-	fmt.Printf("generating %d vectors...\n", size+queriesSize)
+	log.Info("Generating vectors", zap.Int("total", size+queriesSize), zap.Int("dimensions", dimensions))
 	r := getRandomSeed()
 	vectors := make([][]float32, 0, size)
 	queries := make([][]float32, 0, queriesSize)
@@ -128,7 +128,7 @@ func RandomVecs(size int, queriesSize int, dimensions int) ([][]float32, [][]flo
 }
 
 func RandomVecsFixedSeed(size int, queriesSize int, dimensions int) ([][]float32, [][]float32) {
-	fmt.Printf("generating %d vectors...\n", size+queriesSize)
+	log.Info("Generating vectors", zap.Int("total_vectors", size+queriesSize), zap.Int("dimensions", dimensions))
 	r := getFixedSeed()
 	vectors := make([][]float32, 0, size)
 	queries := make([][]float32, 0, queriesSize)
@@ -159,21 +159,21 @@ func Normalize(vectors [][]float32) {
 }
 
 func ReadVecs(size int, queriesSize int, dimensions int, db string, path ...string) ([][]float32, [][]float32) {
-	fmt.Printf("generating %d vectors...", size+queriesSize)
+	log.Info("Generating vectors", zap.Int("total_vectors", size+queriesSize), zap.Int("dimensions", dimensions), zap.String("database", db))
 	uri := db
 	if len(path) > 0 {
 		uri = fmt.Sprintf("%s/%s", path[0], uri)
 	}
 	vectors := readSiftFloat(fmt.Sprintf("%s/%s_base.fvecs", uri, db), size, dimensions)
 	queries := readSiftFloat(fmt.Sprintf("%s/%s_query.fvecs", uri, db), queriesSize, dimensions)
-	fmt.Printf(" done\n")
+	log.Info("Vectors read successfully", zap.String("database", db), zap.String("uri", uri), zap.Int("baseVectors", len(vectors)), zap.Int("queryVectors", len(queries)), zap.Int("dimensions", dimensions))
 	return vectors, queries
 }
 
 func ReadQueries(queriesSize int) [][]float32 {
-	fmt.Printf("generating %d vectors...", queriesSize)
+	log.Info("Generating vectors", zap.Int("queriesSize", queriesSize))
 	queries := readSiftFloat("sift/sift_query.fvecs", queriesSize, 128)
-	fmt.Printf(" done\n")
+	log.Info("Finished generating vectors", zap.Int("queriesSize", queriesSize), zap.Int("actualSize", len(queries)))
 	return queries
 }
 

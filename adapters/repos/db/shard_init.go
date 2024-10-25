@@ -64,10 +64,7 @@ func NewShard(ctx context.Context, promMetrics *monitoring.PrometheusMetrics,
 		p := recover()
 		if p != nil {
 			err = fmt.Errorf("unexpected error initializing shard %q of index %q: %v", shardName, index.ID(), p)
-			index.logger.WithError(err).WithFields(logrus.Fields{
-				"index": index.ID(),
-				"shard": shardName,
-			}).Error("panic during shard initialization")
+			log.Error("panic during shard initialization", zap.Error(err), zap.String("index", index.ID()), zap.String("shard", shardName))
 			debug.PrintStack()
 		}
 
@@ -139,13 +136,13 @@ func NewShard(ctx context.Context, promMetrics *monitoring.PrometheusMetrics,
 				for targetVector, queue := range s.queues {
 					err := s.PreloadQueue(targetVector)
 					if err != nil {
-						queue.Logger.WithError(err).Errorf("preload shard for target vector: %s", targetVector)
+						queue.Logger.Error("preload shard for target vector", zap.Error(err), zap.String("targetVector", targetVector))
 					}
 				}
 			} else {
 				err := s.PreloadQueue("")
 				if err != nil {
-					s.queue.Logger.WithError(err).Error("preload shard")
+					s.queue.Logger.Error("Failed to preload shard", zap.Error(err), zap.String("shard", s.name), zap.String("index", s.index.ID()))
 				}
 			}
 		}

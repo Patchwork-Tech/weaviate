@@ -25,27 +25,27 @@ import (
 // Dump to stdout for debugging purposes
 func (h *hnsw) Dump(labels ...string) {
 	if len(labels) > 0 {
-		fmt.Printf("--------------------------------------------------\n")
+		log.Info("--------------------------------------------------")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", h.id)
-	fmt.Printf("Entrypoint: %d\n", h.entryPointID)
+	h.logger.Info("Entrypoint", zap.Int("entryPointID", h.entryPointID))
 	fmt.Printf("Max Level: %d\n", h.currentMaximumLayer)
-	fmt.Printf("Tombstones %v\n", h.tombstones)
+	log.Info("Tombstones", zap.Any("tombstones", h.tombstones))
 	fmt.Printf("\nNodes and Connections:\n")
 	for _, node := range h.nodes {
 		if node == nil {
 			continue
 		}
 
-		fmt.Printf("  Node %d (level %d)\n", node.id, node.level)
+		log.Info("Node information", zap.Int("id", node.id), zap.Int("level", node.level))
 		for level, conns := range node.connections {
-			fmt.Printf("    Level %d: Connections: %v\n", level, conns)
+			h.logger.Info("Node connections", zap.Int("level", level), zap.Any("connections", conns))
 		}
 	}
 
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 }
 
 // DumpJSON to stdout for debugging purposes
@@ -72,9 +72,9 @@ func (h *hnsw) DumpJSON(labels ...string) {
 
 	out, err := json.Marshal(dump)
 	if err != nil {
-		fmt.Println(err)
+		h.logger.Error("Failed to marshal HNSW graph to JSON", zap.Error(err), zap.Int("nodeCount", len(h.nodes)), zap.Int("currentMaximumLayer", h.currentMaximumLayer))
 	}
-	fmt.Printf("%s\n", string(out))
+	h.logger.Info("HNSW graph JSON dump", zap.ByteString("dump", out))
 }
 
 type JSONDump struct {

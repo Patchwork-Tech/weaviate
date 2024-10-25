@@ -82,7 +82,7 @@ func rebuildGraphQL(updatedSchema schema.Schema, logger logrus.FieldLogger,
 func configureOIDC(appState *state.State) *oidc.Client {
 	c, err := oidc.New(appState.ServerConfig.Config)
 	if err != nil {
-		appState.Logger.WithField("action", "oidc_init").WithError(err).Fatal("oidc client could not start up")
+		appState.Logger.Error("oidc client could not start up", zap.String("action", "oidc_init"), zap.Error(err))
 		os.Exit(1)
 	}
 
@@ -92,7 +92,7 @@ func configureOIDC(appState *state.State) *oidc.Client {
 func configureAPIKey(appState *state.State) *apikey.Client {
 	c, err := apikey.New(appState.ServerConfig.Config)
 	if err != nil {
-		appState.Logger.WithField("action", "oidc_init").WithError(err).Fatal("oidc client could not start up")
+		appState.Logger.Error("oidc client could not start up", zap.String("action", "oidc_init"), zap.Error(err))
 		os.Exit(1)
 	}
 

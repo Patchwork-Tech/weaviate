@@ -83,7 +83,7 @@ func (m *Migrator) SetOffloadProvider(provider provider, moduleName string) {
 		m.logger.Debug(fmt.Sprintf("module %s is not enabled", moduleName))
 	}
 	m.cloud = cloud
-	m.logger.Info(fmt.Sprintf("module %s is enabled", moduleName))
+	m.logger.Info("Module enabled", zap.String("module", moduleName), zap.Bool("enabled", enabled))
 }
 
 func (m *Migrator) AddClass(ctx context.Context, class *models.Class,
@@ -731,7 +731,7 @@ func (m *Migrator) RecountProperties(ctx context.Context) error {
 			return nil
 		})
 		if err != nil {
-			m.logger.WithField("error", err).Error("could not clear prop lengths")
+			m.logger.Error("could not clear property lengths", zap.Error(err))
 		}
 
 		// Iterate over all shards
@@ -739,7 +739,7 @@ func (m *Migrator) RecountProperties(ctx context.Context) error {
 			count = count + 1
 			props, _, err := shard.AnalyzeObject(object)
 			if err != nil {
-				m.logger.WithField("error", err).Error("could not analyze object")
+				m.logger.Error("could not analyze object", zap.Error(err))
 				return nil
 			}
 
@@ -846,16 +846,19 @@ func (m *Migrator) doInvertedIndexMissingTextFilterable(ctx context.Context, tas
 
 	task := newShardInvertedReindexTaskMissingTextFilterable(m)
 	if err := task.init(); err != nil {
-		m.logMissingFilterable().WithError(err).Error("failed init missing text filterable task")
+		m.logMissingFilterable().Error("failed init missing text filterable task", zap.String("taskName", taskName), zap.Error(err))
 		return errors.Wrap(err, "failed init missing text filterable task")
 	}
 
 	if len(task.migrationState.MissingFilterableClass2Props) == 0 {
-		m.logMissingFilterable().Info("no classes to create filterable index, skipping")
+		m.logMissingFilterable().Info("No classes to create filterable index, skipping task",
+    zap.String("taskName", taskName),
+    zap.Bool("taskFound", taskFound),
+    zap.Int("missingFilterableClassCount", len(task.migrationState.MissingFilterableClass2Props)))
 		return nil
 	}
 
-	m.logMissingFilterable().Info("staring missing text filterable task")
+	m.logMissingFilterable().Info("Starting missing text filterable task", zap.String("taskName", taskName), zap.Int("classCount", len(task.migrationState.MissingFilterableClass2Props)))
 
 	eg := enterrors.NewErrorGroupWrapper(m.logger)
 	eg.SetLimit(_NUMCPU * 2)
@@ -919,7 +922,7 @@ func (m *Migrator) doInvertedIndexMissingTextFilterable(ctx context.Context, tas
 		return errors.Wrap(err, "failed missing text filterable task")
 	}
 
-	m.logMissingFilterable().Info("finished missing text filterable task")
+	m.logMissingFilterable().Info("finished missing text filterable task", zap.String("taskName", taskName), zap.Int("processedClassesCount", len(task.migrationState.MissingFilterableClass2Props)))
 	return nil
 }
 

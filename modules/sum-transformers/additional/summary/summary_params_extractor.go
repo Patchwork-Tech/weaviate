@@ -32,7 +32,7 @@ func (p *SummaryProvider) parseSummaryArguments(args []*ast.Argument) *Params {
 
 		default:
 			// ignore what we don't recognize
-			log.Printf("Igonore not recognized value: %v", arg.Name.Value)
+			log.Warn("Ignore not recognized value", zap.String("value", arg.Name.Value))
 		}
 	}
 

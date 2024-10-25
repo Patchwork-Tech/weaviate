@@ -321,12 +321,12 @@ func (dynamic *dynamic) PostStartup() {
 
 func (dynamic *dynamic) Dump(labels ...string) {
 	if len(labels) > 0 {
-		fmt.Printf("--------------------------------------------------\n")
+		dynamic.logger.Info("--------------------------------------------------")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
-	fmt.Printf("--------------------------------------------------\n")
+	dynamic.logger.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", dynamic.id)
-	fmt.Printf("--------------------------------------------------\n")
+	dynamic.logger.Info("--------------------------------------------------")
 }
 
 func (dynamic *dynamic) DistanceBetweenVectors(x, y []float32) (float32, error) {

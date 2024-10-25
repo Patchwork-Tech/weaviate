@@ -44,13 +44,14 @@ type language struct {
 }
 
 func printRelaeseNotes(languages []language, version string) {
-	fmt.Printf("Docker image/tag: `semitechnologies/weaviate:%s`\n", version)
+	log.Info("Docker image/tag", zap.String("image", "semitechnologies/weaviate"), zap.String("version", version))
 	fmt.Printf("See also: example docker-compose files in %s. ", makeLinks(languages, version))
-	fmt.Printf("If you need to configure additional settings, you can also generate " +
-		"a custom `docker-compose.yml` file [using the documentation]" +
-		"(https://weaviate.io/developers/weaviate/installation/docker-compose).")
+	log.Info("Additional configuration options available for custom docker-compose.yml file",
+    zap.String("version", version),
+    zap.Strings("languages", languages),
+    zap.String("documentationURL", "https://weaviate.io/developers/weaviate/installation/docker-compose"))
 	fmt.Printf("\n## Breaking Changes\n*none*\n")
-	fmt.Printf("\n## New Features\n*none*\n")
+	log.Info("New Features", zap.String("version", version), zap.Int("supportedLanguages", len(languages)))
 	fmt.Printf("\n## Fixes\n*none*\n")
 }
 

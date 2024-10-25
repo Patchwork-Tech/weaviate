@@ -280,7 +280,7 @@ func (i *Index) resumeMaintenanceCycles(ctx context.Context) (lastErr error) {
 	i.ForEachShard(func(name string, shard ShardLike) error {
 		if err := shard.resumeMaintenanceCycles(ctx); err != nil {
 			lastErr = err
-			i.logger.WithField("shard", name).WithField("op", "resume_maintenance").Error(err)
+			i.logger.Error("Failed to resume maintenance cycles for shard", zap.String("shard", name), zap.String("op", "resume_maintenance"), zap.Error(err))
 		}
 		time.Sleep(time.Millisecond * 10)
 		return nil
@@ -342,7 +342,7 @@ func (m *shardTransfer) lock(ctx context.Context, tryLock func() bool) error {
 			}
 			if time.Since(curTime) > m.notifyDuration {
 				curTime = time.Now()
-				m.log.Info("backup process waiting for ongoing writes to finish")
+				m.log.Info("backup process waiting for ongoing writes to finish", zap.Duration("elapsed", time.Since(curTime)), zap.Duration("retryDuration", m.retryDuration), zap.Duration("notifyDuration", m.notifyDuration))
 			}
 		}
 	}

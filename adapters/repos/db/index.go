@@ -885,7 +885,7 @@ func (i *Index) putObjectBatch(ctx context.Context, objects []*storobj.Object,
 					for pos := range group.pos {
 						out[pos] = fmt.Errorf("an unexpected error occurred: %s", err)
 					}
-					fmt.Fprintf(os.Stderr, "panic: %s\n", err)
+					i.logger.Error("Panic occurred", zap.Any("error", err))
 					entsentry.Recover(err)
 					debug.PrintStack()
 				}

@@ -68,11 +68,11 @@ func (a *AsyncWorker) do(job job) (stop bool) {
 		}
 
 		if errors.Is(err, context.Canceled) {
-			a.logger.WithError(err).Debug("skipping indexing batch due to context cancellation")
+			a.logger.Info("skipping indexing batch due to context cancellation", zap.Error(err))
 			return true
 		}
 
-		a.logger.WithError(err).Infof("failed to index vectors, retrying in %s", a.retryInterval.String())
+		a.logger.Warn("failed to index vectors, retrying", zap.Error(err), zap.Duration("retryInterval", a.retryInterval))
 
 		t := time.NewTimer(a.retryInterval)
 		select {

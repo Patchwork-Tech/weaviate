@@ -36,7 +36,7 @@ func (s *Shard) PreloadQueue(targetVector string) error {
 
 	vectorIndex := s.getVectorIndex(targetVector)
 	if vectorIndex == nil {
-		s.index.logger.Warn("preload queue: vector index not found")
+		s.index.logger.Warn("preload queue: vector index not found", zap.String("shard_id", s.ID()), zap.String("target_vector", targetVector))
 		// shard was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
@@ -44,7 +44,7 @@ func (s *Shard) PreloadQueue(targetVector string) error {
 
 	q, err := s.getIndexQueue(targetVector)
 	if err != nil {
-		s.index.logger.WithError(err).Warn("preload queue: queue not found")
+		s.index.logger.Error("preload queue: queue not found", zap.Error(err), zap.String("shard_id", s.ID()), zap.String("target_vector", targetVector))
 		// queue was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
@@ -156,7 +156,7 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 
 	vectorIndex := s.getVectorIndex(targetVector)
 	if vectorIndex == nil {
-		s.index.logger.Warn("repair index: vector index not found")
+		s.index.logger.Warn("repair index: vector index not found", zap.String("shard_id", s.ID()), zap.String("target_vector", targetVector))
 		// shard was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
@@ -174,7 +174,7 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 
 	q, err := s.getIndexQueue(targetVector)
 	if err != nil {
-		s.index.logger.WithError(err).Warn("repair index: queue not found")
+		s.index.logger.Warn("repair index: queue not found", zap.Error(err), zap.String("targetVector", targetVector))
 		// queue was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
@@ -213,7 +213,12 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 	// there was an uncaught error during the iteration.
 	// in any case, we should not touch the index.
 	if visited.Len() == 0 {
-		s.index.logger.Warn("repair index: empty LSM store")
+		s.index.logger.Warn("repair index: empty LSM store",
+    zap.Time("start_time", start),
+    zap.Uint64("max_doc_id", maxDocID),
+    zap.Int("visited_count", visited.Len()),
+    zap.String("shard_id", s.ID()),
+    zap.String("target_vector", targetVector))
 		return nil
 	}
 
@@ -226,7 +231,12 @@ func (s *Shard) RepairIndex(ctx context.Context, targetVector string) error {
 		deleted++
 		err := vectorIndex.Delete(id)
 		if err != nil {
-			s.index.logger.WithError(err).WithField("id", id).Warn("delete vector from queue")
+			s.index.logger.Error("Failed to delete vector from queue",
+    zap.Error(err),
+    zap.Uint64("id", id),
+    zap.String("shard_id", s.ID()),
+    zap.String("target_vector", targetVector),
+    zap.Int("deleted_count", deleted))
 		}
 
 		return true
