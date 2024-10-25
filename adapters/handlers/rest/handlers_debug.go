@@ -118,7 +118,7 @@ func setupDebugHandlers(appState *state.State) {
 		path := strings.TrimSpace(strings.TrimPrefix(r.URL.Path, "/debug/stats/collection/"))
 		parts := strings.Split(path, "/")
 		if len(parts) < 3 || len(parts) > 5 || parts[1] != "shards" {
-			logger.WithField("parts", parts).Info("invalid path")
+			logger.Warn("Invalid path in debug stats collection request", zap.Strings("parts", parts), zap.String("path", path))
 			http.Error(w, "invalid path", http.StatusNotFound)
 			return
 		}
