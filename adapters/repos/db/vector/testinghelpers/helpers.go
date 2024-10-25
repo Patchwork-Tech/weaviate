@@ -109,7 +109,7 @@ func readSiftFloat(file string, maxObjects int, vectorLengthFloat int) [][]float
 func ReadSiftVecsFrom(path string, size int, dimensions int) [][]float32 {
 	fmt.Printf("generating %d vectors...", size)
 	vectors := readSiftFloat(path, size, dimensions)
-	fmt.Printf(" done\n")
+	log.Info("Finished reading SIFT vectors", zap.Int("vectorsRead", len(vectors)), zap.String("sourcePath", path), zap.Int("expectedVectors", size), zap.Int("dimensions", dimensions))
 	return vectors
 }
 
