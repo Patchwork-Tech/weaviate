@@ -72,7 +72,7 @@ func (a *AsyncWorker) do(job job) (stop bool) {
 			return true
 		}
 
-		a.logger.WithError(err).Infof("failed to index vectors, retrying in %s", a.retryInterval.String())
+		a.logger.Warn("failed to index vectors, retrying", zap.Error(err), zap.Duration("retryInterval", a.retryInterval))
 
 		t := time.NewTimer(a.retryInterval)
 		select {
