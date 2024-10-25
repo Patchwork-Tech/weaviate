@@ -64,10 +64,7 @@ func NewShard(ctx context.Context, promMetrics *monitoring.PrometheusMetrics,
 		p := recover()
 		if p != nil {
 			err = fmt.Errorf("unexpected error initializing shard %q of index %q: %v", shardName, index.ID(), p)
-			index.logger.WithError(err).WithFields(logrus.Fields{
-				"index": index.ID(),
-				"shard": shardName,
-			}).Error("panic during shard initialization")
+			log.Error("panic during shard initialization", zap.Error(err), zap.String("index", index.ID()), zap.String("shard", shardName))
 			debug.PrintStack()
 		}
 
