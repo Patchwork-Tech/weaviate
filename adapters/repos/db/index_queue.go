@@ -635,7 +635,13 @@ func (q *IndexQueue) checkCompressionSettings() bool {
 		q.PauseIndexing()
 		err := ci.Upgrade(q.ResumeIndexing)
 		if err != nil {
-			q.Logger.WithError(err).Error("failed to upgrade")
+			q.Logger.Error("failed to upgrade index",
+    zap.Error(err),
+    zap.Bool("shouldUpgrade", shouldUpgrade),
+    zap.Int64("shouldUpgradeAt", int64(shouldUpgradeAt)),
+    zap.Uint64("alreadyIndexed", q.index.AlreadyIndexed()),
+    zap.Any("shardID", q.ShardID),
+    zap.Any("targetVector", q.TargetVector))
 		}
 
 		return true
