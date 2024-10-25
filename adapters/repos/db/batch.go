@@ -195,7 +195,17 @@ func (db *DB) BatchDeleteObjects(ctx context.Context, params objects.BatchDelete
 	}
 
 	if err := db.memMonitor.CheckAlloc(memwatch.EstimateObjectDeleteMemory() * matches); err != nil {
-		db.logger.WithError(err).Errorf("memory pressure: cannot process batch delete object")
+		db.logger.Error("memory pressure: cannot process batch delete object",
+    zap.Error(err),
+    zap.String("className", className),
+    zap.Int64("matches", matches),
+    zap.Int64("limit", db.config.QueryMaximumResults),
+    zap.String("tenant", tenant),
+    zap.Uint64("schemaVersion", schemaVersion),
+    zap.Int("shardCount", len(shardDocIDs)),
+    zap.Int("totalDocuments", len(toDelete)),
+    zap.Bool("dryRun", params.DryRun),
+    zap.Bool("hasFilters", len(params.Filters) > 0))
 		return objects.BatchDeleteResult{}, fmt.Errorf("cannot process batch delete object: %w", err)
 	}
 
