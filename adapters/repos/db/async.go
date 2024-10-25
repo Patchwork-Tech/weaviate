@@ -68,7 +68,7 @@ func (a *AsyncWorker) do(job job) (stop bool) {
 		}
 
 		if errors.Is(err, context.Canceled) {
-			a.logger.WithError(err).Debug("skipping indexing batch due to context cancellation")
+			a.logger.Info("skipping indexing batch due to context cancellation", zap.Error(err))
 			return true
 		}
 
