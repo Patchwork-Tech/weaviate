@@ -72,10 +72,7 @@ func handlePanics(logger logrus.FieldLogger, metricRequestsTotal restApiRequests
 	}
 
 	// typed as error, but none we are currently handling explicitly
-	logger.WithError(err).WithFields(logrus.Fields{
-		"method": r.Method,
-		"path":   r.URL,
-	}).Errorf(err.Error())
+	logger.Error("Unexpected error occurred", zap.Error(err), zap.String("method", r.Method), zap.String("path", r.URL.String()))
 	// This was not expected, so we want to print the stack, this will help us
 	// find the source of the issue if the user sends their logs
 	metricRequestsTotal.logServerError("", err)
