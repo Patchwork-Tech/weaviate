@@ -103,7 +103,7 @@ func (m *filterableToSearchableMigrator) migrate(ctx context.Context) error {
 	if migrationStateUpdated {
 		m.log().Debug("saving migration state")
 		if err := m.files.saveMigrationState(migrationState); err != nil {
-			m.log().WithError(err).Error("failed saving migration state")
+			m.log().Error("failed saving migration state", zap.Error(err), zap.Bool("migrationStateUpdated", migrationStateUpdated))
 			return errors.Wrap(err, "failed saving migration state")
 		}
 	}
