@@ -1468,8 +1468,7 @@ func limitResources(appState *state.State) {
 			appState.Logger.WithField("limit", limit).Info("Set memory limit")
 		}
 	} else {
-		appState.Logger.Info("No resource limits set, weaviate will use all available memory and CPU. " +
-			"To limit resources, set LIMIT_RESOURCES=true")
+		appState.Logger.Info("No resource limits set, weaviate will use all available memory and CPU. To limit resources, set LIMIT_RESOURCES=true")
 	}
 }
 
