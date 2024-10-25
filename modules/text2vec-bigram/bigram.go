@@ -125,7 +125,7 @@ func ord(letter rune) int {
 func stripNonAlphabets(input string) string {
 	reg, err := regexp.Compile("[^a-zA-Z]+")
 	if err != nil {
-		fmt.Println("Error compiling regex:", err)
+		log.Error("Error compiling regex", zap.String("input", input), zap.Error(err))
 	}
 	return reg.ReplaceAllString(input, "")
 }
