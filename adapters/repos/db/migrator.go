@@ -855,7 +855,7 @@ func (m *Migrator) doInvertedIndexMissingTextFilterable(ctx context.Context, tas
 		return nil
 	}
 
-	m.logMissingFilterable().Info("staring missing text filterable task")
+	m.logMissingFilterable().Info("Starting missing text filterable task", zap.String("taskName", taskName), zap.Int("classCount", len(task.migrationState.MissingFilterableClass2Props)))
 
 	eg := enterrors.NewErrorGroupWrapper(m.logger)
 	eg.SetLimit(_NUMCPU * 2)
