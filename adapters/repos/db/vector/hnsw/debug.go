@@ -25,7 +25,7 @@ import (
 // Dump to stdout for debugging purposes
 func (h *hnsw) Dump(labels ...string) {
 	if len(labels) > 0 {
-		fmt.Printf("--------------------------------------------------\n")
+		log.Info("--------------------------------------------------")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
 	fmt.Printf("--------------------------------------------------\n")
