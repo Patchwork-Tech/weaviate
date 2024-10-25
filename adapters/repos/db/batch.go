@@ -60,7 +60,7 @@ func (db *DB) BatchPutObjects(ctx context.Context, objs objects.BatchObjects,
 			index, ok := db.indices[indexID(schema.ClassName(class))]
 			if !ok {
 				msg := fmt.Sprintf("could not find index for class %v. It might have been deleted in the meantime", class)
-				db.logger.Warn(msg)
+				db.logger.Warn("Could not find index for class", zap.String("class", class), zap.Uint64("schemaVersion", schemaVersion), zap.Int("batchSize", len(objs)))
 				for _, origIdx := range queue.originalIndex {
 					if origIdx >= len(objs) {
 						db.logger.Errorf(
