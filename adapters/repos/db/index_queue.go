@@ -364,7 +364,7 @@ func (q *IndexQueue) Delete(ids ...uint64) error {
 		if q.index.ContainsNode(ids[i]) {
 			err := q.index.Delete(ids[i])
 			if err != nil {
-				q.Logger.WithError(err).Error("failed to delete vector from index")
+				q.Logger.Error("failed to delete vector from index", zap.Error(err), zap.Uint64("id", ids[i]), zap.Int("index", i), zap.Uint64("shardID", q.shardID))
 			}
 		} else {
 			q.queue.Delete(ids[i])
