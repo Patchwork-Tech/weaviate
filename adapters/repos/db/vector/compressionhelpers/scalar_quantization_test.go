@@ -57,7 +57,13 @@ func Test_NoRaceSQDistance(t *testing.T) {
 		assert.Nil(t, err)
 		if err == nil {
 			assert.True(t, math.Abs(float64(expectedDist-dist)) < 0.01)
-			fmt.Println(expectedDist-dist, expectedDist, dist)
+			log.Info("Distance comparison for ScalarQuantizer",
+    zap.String("distancer", fmt.Sprintf("%T", distancer)),
+    zap.Float32("expected_distance", expectedDist),
+    zap.Float32("actual_distance", dist),
+    zap.Float32("difference", expectedDist-dist),
+    zap.Any("vector1", vec1),
+    zap.Any("vector2", vec2))
 		}
 	}
 }
