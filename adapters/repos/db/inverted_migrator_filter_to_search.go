@@ -113,7 +113,7 @@ func (m *filterableToSearchableMigrator) migrate(ctx context.Context) error {
 	}
 
 	if err := m.files.createMigrationSkipFlag(); err != nil {
-		m.log().WithError(err).Error("failed creating migration skip flag")
+		m.log().Error("failed creating migration skip flag", zap.Error(err), zap.Bool("migrationStateUpdated", migrationStateUpdated))
 		return errors.Wrap(err, "failed creating migration skip flag")
 	}
 
