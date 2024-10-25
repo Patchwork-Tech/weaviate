@@ -111,7 +111,15 @@ func Test_NoRacePQKMeans(t *testing.T) {
 		relevant += testinghelpers.MatchesInLists(truth, results)
 	}
 	recall := float32(relevant) / float32(k*queries_size)
-	fmt.Println(recall)
+	log.Info("PQKMeans test completed",
+    zap.Int("dimensions", dimensions),
+    zap.Int("vectors_size", vectors_size),
+    zap.Int("queries_size", queries_size),
+    zap.Int("k", k),
+    zap.String("distance_provider", "DotProductProvider"),
+    zap.Any("pq_config", cfg),
+    zap.Uint64("relevant_matches", relevant),
+    zap.Float32("recall", recall))
 	assert.True(t, recall > 0.99)
 }
 
