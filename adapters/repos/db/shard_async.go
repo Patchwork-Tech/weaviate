@@ -44,7 +44,7 @@ func (s *Shard) PreloadQueue(targetVector string) error {
 
 	q, err := s.getIndexQueue(targetVector)
 	if err != nil {
-		s.index.logger.WithError(err).Warn("preload queue: queue not found")
+		s.index.logger.Error("preload queue: queue not found", zap.Error(err), zap.String("shard_id", s.ID()), zap.String("target_vector", targetVector))
 		// queue was never initialized, possibly because of a failed shard
 		// initialization. No op.
 		return nil
