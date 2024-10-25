@@ -71,7 +71,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 		compressionhelpers.Concurrently(logger, uint64(len(queries)), func(i uint64) {
 			truths[i], _ = testinghelpers.BruteForce(logger, vectors, queries[i], k, distanceWrapper(distancer))
 		})
-		fmt.Printf("generating data took %s\n", time.Since(before))
+		logger.Info("Data generation completed", zap.Duration("duration", time.Since(before)))
 
 		uc := ent.UserConfig{
 			MaxConnections:        maxNeighbors,
