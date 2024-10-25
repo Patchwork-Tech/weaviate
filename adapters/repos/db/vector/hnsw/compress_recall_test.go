@@ -136,7 +136,7 @@ func Test_NoRaceCompressionRecall(t *testing.T) {
 
 			err := os.RemoveAll(path)
 			if err != nil {
-				fmt.Println(err)
+				logger.Error("Error removing temporary directory", zap.Error(err))
 			}
 			wg.Done()
 		})
