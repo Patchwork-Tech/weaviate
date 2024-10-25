@@ -321,7 +321,7 @@ func (dynamic *dynamic) PostStartup() {
 
 func (dynamic *dynamic) Dump(labels ...string) {
 	if len(labels) > 0 {
-		fmt.Printf("--------------------------------------------------\n")
+		dynamic.logger.Info("--------------------------------------------------")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
 	fmt.Printf("--------------------------------------------------\n")
