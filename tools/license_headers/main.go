@@ -58,7 +58,7 @@ func processSingleFile(name string) error {
 		if err != nil {
 			return fmt.Errorf("%s: %v", name, err)
 		}
-		fmt.Printf("🖋️  successfully created header: %s\n", name)
+		log.Info("Successfully created header", zap.String("file", name))
 		return nil
 	}
 
