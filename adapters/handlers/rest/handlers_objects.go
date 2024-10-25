@@ -645,7 +645,7 @@ func setupObjectHandlers(api *operations.WeaviateAPI,
 func (h *objectHandlers) getObjectDeprecated(params objects.ObjectsGetParams,
 	principal *models.Principal,
 ) middleware.Responder {
-	h.logger.Warn("deprecated endpoint: ", "GET "+params.HTTPRequest.URL.Path)
+	h.logger.Warn("deprecated endpoint", zap.String("method", "GET"), zap.String("path", params.HTTPRequest.URL.Path))
 	ps := objects.ObjectsClassGetParams{
 		HTTPRequest: params.HTTPRequest,
 		ID:          params.ID,
