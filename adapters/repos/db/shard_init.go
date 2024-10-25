@@ -142,7 +142,7 @@ func NewShard(ctx context.Context, promMetrics *monitoring.PrometheusMetrics,
 			} else {
 				err := s.PreloadQueue("")
 				if err != nil {
-					s.queue.Logger.WithError(err).Error("preload shard")
+					s.queue.Logger.Error("Failed to preload shard", zap.Error(err), zap.String("shard", s.name), zap.String("index", s.index.ID()))
 				}
 			}
 		}
