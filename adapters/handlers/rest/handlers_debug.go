@@ -64,7 +64,7 @@ func setupDebugHandlers(appState *state.State) {
 			return
 		}
 
-		logger.WithField("shard", shardName).Info("reindexing started")
+		logger.Info("reindexing started", zap.String("shard", shardName), zap.String("collection", colName), zap.String("targetVector", targetVector))
 
 		w.WriteHeader(http.StatusAccepted)
 	}))
