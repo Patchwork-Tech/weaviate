@@ -159,7 +159,7 @@ func setupDebugHandlers(appState *state.State) {
 
 		stats, err := vidx.Stats()
 		if err != nil {
-			logger.Error(err)
+			logger.Error("Failed to get vector index stats", zap.String("collection", colName), zap.String("shard", shardName), zap.String("vectorIndexID", vecIdxID), zap.Error(err))
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
