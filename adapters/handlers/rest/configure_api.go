@@ -1406,7 +1406,7 @@ func setupGoProfiling(config config.Config, logger logrus.FieldLogger) {
 	enterrors.GoWrapper(func() {
 		portNumber := config.Profiling.Port
 		if portNumber == 0 {
-			fmt.Println(http.ListenAndServe(":6060", nil))
+			logger.Error("Failed to start profiling HTTP server on default port", zap.Int("defaultPort", 6060), zap.Error(http.ListenAndServe(":6060", nil)))
 		} else {
 			http.ListenAndServe(fmt.Sprintf(":%d", portNumber), nil)
 		}
