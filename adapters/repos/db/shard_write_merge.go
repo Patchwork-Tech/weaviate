@@ -245,7 +245,7 @@ func (s *Shard) mergeObjectData(prevObj *storobj.Object,
 	merge objects.MergeDocument,
 ) (*storobj.Object, *storobj.Object, error) {
 	if prevObj == nil {
-		s.index.logger.WithField("id", merge.ID).Error("resurrecting a zombie object")
+		s.index.logger.Warn("Resurrecting a zombie object due to nil previous object", zap.String("id", merge.ID))
 		// DocID must be overwritten after status check, simply set to initial
 		// value
 		prevObj = storobj.New(0)
