@@ -422,7 +422,7 @@ func (q *IndexQueue) indexer() {
 
 			status, err := q.Shard.compareAndSwapStatusIndexingAndReady(storagestate.StatusReady.String(), storagestate.StatusIndexing.String())
 			if status != storagestate.StatusIndexing || err != nil {
-				q.Logger.WithField("status", status).WithError(err).Warn("failed to set shard status to 'indexing', trying again in " + q.IndexInterval.String())
+				q.Logger.Warn("failed to set shard status to 'indexing', trying again", zap.String("status", status), zap.Error(err), zap.Duration("retryInterval", q.IndexInterval))
 				q.indexLock.RUnlock()
 				continue
 			}
