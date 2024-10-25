@@ -810,7 +810,7 @@ func (index *flat) Dump(labels ...string) {
 	}
 	log.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", index.id)
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 }
 
 func (index *flat) DistanceBetweenVectors(x, y []float32) (float32, error) {
