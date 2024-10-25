@@ -199,7 +199,7 @@ func (m *filterableToSearchableMigrator) migrateClass(ctx context.Context, index
 
 		eg.Go(func() error {
 			if err := m.migrateShard(ctx, shard, props); err != nil {
-				m.logShard(shard).WithError(err).Error("failed migrating shard")
+				m.logShard(shard).Error("failed migrating shard", zap.Error(err), zap.String("shardName", shard.Name()), zap.String("className", index.Config.ClassName.String()), zap.Int("numPropsToFix", len(props)))
 				return errors.Wrap(err, "failed migrating shard")
 			}
 			return nil
