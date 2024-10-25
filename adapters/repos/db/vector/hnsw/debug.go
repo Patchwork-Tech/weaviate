@@ -72,7 +72,7 @@ func (h *hnsw) DumpJSON(labels ...string) {
 
 	out, err := json.Marshal(dump)
 	if err != nil {
-		fmt.Println(err)
+		h.logger.Error("Failed to marshal HNSW graph to JSON", zap.Error(err), zap.Int("nodeCount", len(h.nodes)), zap.Int("currentMaximumLayer", h.currentMaximumLayer))
 	}
 	fmt.Printf("%s\n", string(out))
 }
