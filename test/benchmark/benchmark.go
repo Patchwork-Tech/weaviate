@@ -191,7 +191,7 @@ func readCurrentBenchmarkResults() benchmarkResult {
 }
 
 func tearDownWeaviate() error {
-	fmt.Print("Shutting down weaviate.\n")
+	log.Info("Shutting down weaviate.")
 	app := "docker-compose"
 	arguments := []string{
 		"down",
