@@ -1459,7 +1459,7 @@ func limitResources(appState *state.State) {
 
 		limit, err := memlimit.SetGoMemLimit(0.8)
 		if err != nil {
-			appState.Logger.WithError(err).Warnf("Unable to set memory limit from cgroups: %v", err)
+			appState.Logger.Warn("Unable to set memory limit from cgroups", zap.Error(err))
 			// Set memory limit to 90% of the available memory
 			limit := int64(float64(memory.TotalMemory()) * 0.8)
 			debug.SetMemoryLimit(limit)
