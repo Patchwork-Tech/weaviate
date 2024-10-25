@@ -113,7 +113,7 @@ func main() {
 	)
 	log.Info("Runtime for individual steps:")
 	for name, time := range newRuntime {
-		fmt.Fprint(os.Stdout, "Runtime for "+name+" is "+fmt.Sprint(time)+"ms.\n")
+		log.Info("Runtime for step", zap.String("name", name), zap.Int64("time", time))
 	}
 
 	// Return with error code if runtime regressed and corresponding flag was set
