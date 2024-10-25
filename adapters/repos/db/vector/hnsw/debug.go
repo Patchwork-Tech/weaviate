@@ -41,7 +41,7 @@ func (h *hnsw) Dump(labels ...string) {
 
 		log.Info("Node information", zap.Int("id", node.id), zap.Int("level", node.level))
 		for level, conns := range node.connections {
-			fmt.Printf("    Level %d: Connections: %v\n", level, conns)
+			h.logger.Info("Node connections", zap.Int("level", level), zap.Any("connections", conns))
 		}
 	}
 
