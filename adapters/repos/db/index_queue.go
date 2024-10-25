@@ -906,7 +906,7 @@ func (q *vectorQueue) persistCheckpoint(minID uint64) {
 
 	err := q.IndexQueue.Checkpoints.UpdateIfNewer(q.IndexQueue.shardID, q.IndexQueue.targetVector, checkpoint)
 	if err != nil {
-		q.IndexQueue.Logger.WithError(err).Warn("checkpoint not updated")
+		q.IndexQueue.Logger.Warn("checkpoint not updated", zap.Error(err), zap.Uint64("shardID", q.IndexQueue.shardID), zap.String("targetVector", q.IndexQueue.targetVector), zap.Int("fullChunks", cl), zap.Uint64("delta", delta), zap.Uint64("checkpoint", checkpoint), zap.Uint64("minID", minID))
 	}
 }
 
