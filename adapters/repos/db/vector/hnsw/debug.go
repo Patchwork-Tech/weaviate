@@ -28,7 +28,7 @@ func (h *hnsw) Dump(labels ...string) {
 		fmt.Printf("--------------------------------------------------\n")
 		fmt.Printf("--  %s\n", strings.Join(labels, ", "))
 	}
-	fmt.Printf("--------------------------------------------------\n")
+	log.Info("--------------------------------------------------")
 	fmt.Printf("ID: %s\n", h.id)
 	fmt.Printf("Entrypoint: %d\n", h.entryPointID)
 	fmt.Printf("Max Level: %d\n", h.currentMaximumLayer)
